@@ -17,7 +17,9 @@ Simply:
 Right then, let's get cracking. Copy this rather dashing one-liner into your terminal:
 
 ```bash
-curl -sSL https://raw.githubusercontent.com/yourusername/simple-dropbox/main/setup.sh | bash -s -- || { echo "Well that's gone pear-shaped!"; exit 1; }
+curl -sSL "https://raw.githubusercontent.com/espi/simple-dropbox/main/setup.sh" -o setup.sh && \
+chmod +x setup.sh && \
+./setup.sh
 ```
 
 Or if you prefer to do things the proper way:
@@ -42,7 +44,7 @@ fi
 
 # Clone the repository
 echo -e "${BLUE}Fetching the goods...${NC}"
-git clone https://github.com/yourusername/simple-dropbox.git
+git clone https://github.com/espi/simple-dropbox.git
 cd simple-dropbox
 
 # Set up virtual environment
@@ -78,7 +80,7 @@ Rather straightforward, really. Drop your files onto the web interface, and they
 
 ## Requirements
 
-- Python 3.x (Because we're not savages)
+- Python 3.x (Because, like I already said, we're not savages!)
 - Flask (For serving up our lovely web interface)
 - A sense of humour (Optional, but highly recommended)
 

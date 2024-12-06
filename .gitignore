@@ -1,1 +1,24 @@
-static/uploads/
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+env/
+venv/
+ENV/
+
+# Upload folder
+dropbox/static/uploads/
+
+# IDE
+.idea/
+.vscode/
+*.swp
+*.swo
+
+# ngrok
+.ngrok2/
+
+# Environment variables
+.env

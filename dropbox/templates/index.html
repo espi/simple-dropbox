@@ -1,0 +1,63 @@
+{% extends "base.html" %}
+
+{% block title %}Simple Dropbox{% endblock %}
+
+{% block content %}
+<h1>Simple Dropbox</h1>
+
+<div class="upload-form">
+    <h2>Upload Files</h2>
+    <div id="dropZone" class="drop-zone">
+        <div class="drop-zone-text">Drag and drop files here</div>
+        <div class="drop-zone-subtext">or click to select files</div>
+        <input type="file" id="fileInput" multiple style="display: none">
+        <div id="status" class="hidden"></div>
+        <div class="progress-bar hidden">
+            <div class="progress"></div>
+        </div>
+    </div>
+</div>
+
+<div class="files-section">
+    <h2>Uploaded Files</h2>
+    {% set current_timestamp = None %}
+    {% for file in files %}
+    {% if file.timestamp != current_timestamp %}
+    {% if current_timestamp != None %}
+    </ul>
+</div>
+{% endif %}
+{% set current_timestamp = file.timestamp %}
+<div class="batch-group">
+    <div class="batch-header">
+        Upload Batch: {{ file.timestamp[:4] }}-{{ file.timestamp[4:6] }}-{{ file.timestamp[6:8] }}
+        {{ file.timestamp[9:11] }}:{{ file.timestamp[11:13] }}:{{ file.timestamp[13:15] }}
+    </div>
+    <ul class="file-list">
+        {% endif %}
+        <li>
+            <a href="{{ url_for('main.download_file', filepath=file.path) }}">{{ file.name }}</a>
+            <div class="file-info">
+                {% if file.size is defined %}
+                <span class="file-size">{{ (file.size / 1024)|round|int }} KB</span>
+                {% endif %}
+                {% if file.type is defined %}
+                <span class="file-type">{{ file.type.split('/')[-1] if file.type else 'Unknown' }}</span>
+                {% endif %}
+                <button class="delete-btn" data-filepath="{{ file.path }}" title="Delete file">
+                    ×
+                </button>
+            </div>
+        </li>
+        {% if loop.last %}
+    </ul>
+</div>
+{% endif %}
+{% endfor %}
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script src="{{ url_for('static', filename='js/upload.js') }}"></script>
+<script src="{{ url_for('static', filename='js/file-manager.js') }}"></script>
+{% endblock %}

@@ -1,3 +1,16 @@
+let MAX_FILE_SIZE_MB;
+
+// Fetch max file size from server when the script loads
+fetch('/config')
+    .then(response => response.json())
+    .then(config => {
+        MAX_FILE_SIZE_MB = config.maxFileSizeMB;
+    })
+    .catch(error => {
+        console.error('Error fetching config:', error);
+        MAX_FILE_SIZE_MB = 250; // Fallback value
+    });
+
 const dropZone = document.getElementById('dropZone');
 const fileInput = document.getElementById('fileInput');
 const status = document.getElementById('status');
@@ -66,18 +79,15 @@ function uploadFiles(files) {
         }
     });
 
-    xhr.onload = function () {
-        if (xhr.status === 200) {
-            const response = JSON.parse(xhr.responseText);
-            status.textContent = response.message;
-            setTimeout(() => {
-                status.classList.add('hidden');
-                progressBar.classList.add('hidden');
-                progress.style.width = '0%';
-                window.location.reload();
-            }, 2000);
-        } else {
-            status.textContent = 'Upload failed';
+    xhr.onreadystatechange = function () {
+        if (xhr.readyState === 4) {
+            if (xhr.status === 413) {
+                const totalSize = files.reduce((sum, file) => sum + file.size, 0);
+                const totalSizeMB = (totalSize / (1024 * 1024)).toFixed(1);
+                status.textContent = `Upload failed: Total size (${totalSizeMB}MB) exceeds maximum limit of ${MAX_FILE_SIZE_MB}MB`;
+            } else if (xhr.status !== 200) {
+                status.textContent = 'Upload failed: ' + (xhr.responseText || 'Unknown error');
+            }
         }
     };
 

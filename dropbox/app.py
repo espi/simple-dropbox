@@ -7,6 +7,9 @@ from .utils.ngrok_handler import NgrokHandler
 # Load environment variables
 load_dotenv()
 
+# Get max file size from environment
+MAX_FILE_SIZE_MB = int(os.getenv('MAX_FILE_SIZE_MB', 250))  # Default to 250MB if not set
+
 def ensure_directories(app):
     """Ensure uploads directory exists"""
     uploads_dir = app.config['UPLOAD_FOLDER']
@@ -24,7 +27,8 @@ def create_app():
     
     # Configuration
     app.config['UPLOAD_FOLDER'] = os.path.join(app.static_folder, 'uploads')
-    app.config['MAX_CONTENT_LENGTH'] = 16 * 1024 * 1024  # 16MB max file size
+    app.config['MAX_FILE_SIZE_MB'] = MAX_FILE_SIZE_MB  # Store the value in app config
+    app.config['MAX_CONTENT_LENGTH'] = MAX_FILE_SIZE_MB * 1024 * 1024  # Convert MB to bytes
     
     # Ensure uploads directory exists
     ensure_directories(app)

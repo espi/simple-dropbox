@@ -1,5 +1,6 @@
 from flask import Blueprint, render_template, request, send_from_directory, jsonify
 from dropbox.utils.file_handler import FileHandler
+from . import app
 
 main_bp = Blueprint('main', __name__)
 file_handler = FileHandler()
@@ -22,4 +23,11 @@ def download_file(filepath):
 
 @main_bp.route('/delete/<path:filepath>', methods=['DELETE'])
 def delete_file(filepath):
-    return file_handler.handle_delete(filepath) 
+    return file_handler.handle_delete(filepath)
+
+@main_bp.route('/config')
+def get_config():
+    from flask import current_app
+    return jsonify({
+        'maxFileSizeMB': current_app.config.get('MAX_FILE_SIZE_MB', 250)
+    }) 

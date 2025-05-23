@@ -20,6 +20,9 @@
 
 <div class="files-section">
     <h2>Uploaded Files</h2>
+    {% if not files %}
+    <p class="empty-state-message">No files uploaded yet.</p>
+    {% else %}
     {% set current_timestamp = None %}
     {% for file in files %}
     {% if file.timestamp != current_timestamp %}
@@ -54,6 +57,7 @@
 </div>
 {% endif %}
 {% endfor %}
+{% endif %}
 </div>
 {% endblock %}
 
